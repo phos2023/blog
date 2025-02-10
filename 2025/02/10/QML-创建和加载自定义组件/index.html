@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>QML 创建和加载自定义组件 | 磷叶石的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="转载自 Qt-PySide2-Primer，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。 创建和加载自定义组件使用Component可以创建自定义的组件，它的顶层元素只能有一个，并且不能有id以外的属性 :   12345678Component &#123;    id: componentId      &#x2F;&#x2F; 组件的id">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QML 创建和加载自定义组件">
+<meta property="og:url" content="http://phos2023.github.io/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6/index.html">
+<meta property="og:site_name" content="磷叶石的博客">
+<meta property="og:description" content="转载自 Qt-PySide2-Primer，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。 创建和加载自定义组件使用Component可以创建自定义的组件，它的顶层元素只能有一个，并且不能有id以外的属性 :   12345678Component &#123;    id: componentId      &#x2F;&#x2F; 组件的id">
+<meta property="og:locale">
+<meta property="og:image" content="https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master//image/qml/09.component_and_loader/parameters.png">
+<meta property="article:published_time" content="2025-02-10T10:50:26.000Z">
+<meta property="article:modified_time" content="2025-02-10T10:50:55.000Z">
+<meta property="article:author" content="磷叶石">
+<meta property="article:tag" content="Qt">
+<meta property="article:tag" content="QML">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="PySide">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master//image/qml/09.component_and_loader/parameters.png">
+  
+    <link rel="alternate" href="/blog/blog/atom.xml" title="磷叶石的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/blog/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">磷叶石的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">没有买卖，就没有杀害。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/blog/blog">Home</a>
+        
+          <a class="main-nav-link" href="/blog/blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/phos2023"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/blog/blog/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://phos2023.github.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-QML-创建和加载自定义组件" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6/" class="article-date">
+  <time class="dt-published" datetime="2025-02-10T10:50:26.000Z" itemprop="datePublished">2025-02-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      QML 创建和加载自定义组件
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>转载自 <a target="_blank" rel="noopener" href="https://github.com/hubenchang0515/Qt-PySide2-Primer/blob/master/note/qml/09.component_and_loader.md">Qt-PySide2-Primer</a>，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。</p>
+<h1 id="创建和加载自定义组件"><a href="#创建和加载自定义组件" class="headerlink" title="创建和加载自定义组件"></a>创建和加载自定义组件</h1><p>使用<code>Component</code>可以创建自定义的组件，它的顶层元素只能有一个，并且不能有<code>id</code>以外的属性 :  </p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">Component</span> &#123;</span><br><span class="line">    <span class="attribute">id:</span><span class="string"> componentId</span>      <span class="comment">// 组件的id</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 只能由一个顶层元素，在顶层元素内可以包含任意元素</span></span><br><span class="line">    <span class="title">Item</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>Loader</code>可以加载qml文件或者组件 :  </p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">Loader</span> &#123;</span><br><span class="line">    <span class="attribute">source</span>: <span class="string">&quot;xxx.qml&quot;</span>                 <span class="comment">// qml文件</span></span><br><span class="line">    <span class="comment">/* 或 */</span></span><br><span class="line">    <span class="attribute">sourceComponent</span>: componentId      <span class="comment">// 组件的id</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是一个示例，通过<code>Component</code>将一组相关的元素作为一个组件，再通过<code>Loader</code>多次加载 :  </p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> QtQuick <span class="number">2.13</span></span><br><span class="line"><span class="keyword">import</span> QtQuick.Window <span class="number">2.13</span></span><br><span class="line"><span class="keyword">import</span> QtQuick.Controls <span class="number">2.5</span></span><br><span class="line"><span class="keyword">import</span> QtQuick.Layouts <span class="number">1.13</span></span><br><span class="line"></span><br><span class="line"><span class="title">Window</span> &#123;</span><br><span class="line">    <span class="attribute">id:</span><span class="string"> mainWindow</span></span><br><span class="line">    <span class="attribute">visible</span>: <span class="literal">true</span></span><br><span class="line">    <span class="attribute">width</span>: <span class="number">640</span></span><br><span class="line">    <span class="attribute">height</span>: <span class="number">400</span></span><br><span class="line">    <span class="attribute">title</span>: qsTr(<span class="string">&quot;PySide2 QML&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建组件</span></span><br><span class="line">    <span class="title">Component</span> &#123;</span><br><span class="line">        <span class="attribute">id:</span><span class="string"> parameter</span> <span class="comment">// 组件ID</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 顶层元素</span></span><br><span class="line">        <span class="title">RowLayout</span> &#123;</span><br><span class="line"></span><br><span class="line">            <span class="title">TextField</span> &#123;</span><br><span class="line">                <span class="attribute">Layout.fillWidth</span>: <span class="literal">true</span></span><br><span class="line">                <span class="attribute">Layout.fillHeight</span>: <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">                <span class="attribute">placeholderText</span>: qsTr(<span class="string">&quot;属性名&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="title">ComboBox</span> &#123;</span><br><span class="line">                <span class="attribute">Layout.fillWidth</span>: <span class="literal">true</span></span><br><span class="line">                <span class="attribute">Layout.fillHeight</span>: <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">                <span class="attribute">textRole</span>: <span class="string">&quot;key&quot;</span></span><br><span class="line">                <span class="attribute">model</span>: <span class="title">ListModel</span> &#123;</span><br><span class="line">                    <span class="title">ListElement</span> &#123; <span class="attribute">key</span>: <span class="string">&quot;int&quot;</span>; <span class="attribute">value</span>: <span class="number">1</span> &#125;</span><br><span class="line">                    <span class="title">ListElement</span> &#123; <span class="attribute">key</span>: <span class="string">&quot;string&quot;</span>; <span class="attribute">value</span>: <span class="number">2</span> &#125;</span><br><span class="line">                    <span class="title">ListElement</span> &#123; <span class="attribute">key</span>: <span class="string">&quot;bool&quot;</span>; <span class="attribute">value</span>: <span class="number">3</span> &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="title">TextField</span> &#123;</span><br><span class="line">                <span class="attribute">Layout.fillWidth</span>: <span class="literal">true</span></span><br><span class="line">                <span class="attribute">Layout.fillHeight</span>: <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">                <span class="attribute">placeholderText</span>: qsTr(<span class="string">&quot;值域下界&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="title">TextField</span> &#123;</span><br><span class="line">                <span class="attribute">Layout.fillWidth</span>: <span class="literal">true</span></span><br><span class="line">                <span class="attribute">Layout.fillHeight</span>: <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">                <span class="attribute">placeholderText</span>: qsTr(<span class="string">&quot;值域上界&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title">Column</span> &#123;</span><br><span class="line">        <span class="attribute">anchors.fill</span>: <span class="built_in">parent</span></span><br><span class="line">        <span class="attribute">spacing</span>: <span class="number">5</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 加载组件</span></span><br><span class="line">        <span class="title">Loader</span> &#123;</span><br><span class="line">            <span class="attribute">id:</span><span class="string"> param1</span></span><br><span class="line">            <span class="attribute">sourceComponent</span>: parameter      <span class="comment">// 组件的id</span></span><br><span class="line">            <span class="attribute">width</span>: <span class="built_in">parent</span>.width</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title">Loader</span> &#123;</span><br><span class="line">            <span class="attribute">id:</span><span class="string"> param2</span></span><br><span class="line">            <span class="attribute">sourceComponent</span>: parameter      <span class="comment">// 组件的id</span></span><br><span class="line">            <span class="attribute">width</span>: <span class="built_in">parent</span>.width</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title">Loader</span> &#123;</span><br><span class="line">            <span class="attribute">id:</span><span class="string"> param3</span></span><br><span class="line">            <span class="attribute">sourceComponent</span>: parameter      <span class="comment">// 组件的id</span></span><br><span class="line">            <span class="attribute">width</span>: <span class="built_in">parent</span>.width</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master//image/qml/09.component_and_loader/parameters.png" alt="Image"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考 :"></a>参考 :</h2><ul>
+<li>QML<ul>
+<li><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qml-qtqml-component.html">Component</a></li>
+<li><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qml-qtquick-loader.html">Loader</a></li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://phos2023.github.io/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6/" data-id="cm6yy8t8f0008mkin93sjd545" data-title="QML 创建和加载自定义组件" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/PySide/" rel="tag">PySide</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/QML/" rel="tag">QML</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qt/" rel="tag">Qt</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2025/02/10/QML-%E4%BD%BF%E7%94%A8Loader%E5%8F%98%E6%9B%B4%E9%A1%B5%E9%9D%A2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          QML 使用Loader变更页面
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%B1%BB/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">QML 创建自定义的类</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Proxy/" rel="tag">Proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/PySide/" rel="tag">PySide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/QML/" rel="tag">QML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Qt/" rel="tag">Qt</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Git/" style="font-size: 10px;">Git</a> <a href="/blog/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/blog/tags/PySide/" style="font-size: 20px;">PySide</a> <a href="/blog/tags/Python/" style="font-size: 20px;">Python</a> <a href="/blog/tags/QML/" style="font-size: 15px;">QML</a> <a href="/blog/tags/Qt/" style="font-size: 20px;">Qt</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2025/02/">February 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%BD%BF%E7%94%A8Loader%E5%8F%98%E6%9B%B4%E9%A1%B5%E9%9D%A2/">QML 使用Loader变更页面</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6/">QML 创建和加载自定义组件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%B1%BB/">QML 创建自定义的类</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%BD%BF%E7%94%A8-Canvas-%E7%BB%98%E5%9B%BE/">QML 使用 Canvas 绘图</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%B8%AD%E4%BD%BF%E7%94%A8-Python-%E5%AF%B9%E8%B1%A1/">QML 中使用 Python 对象</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+        友情链接: <a href="https://hubenchang0515.github.io/" target="_blank">Plan C 的主页</a><br/>
+      
+      &copy; 2025 磷叶石<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/blog" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/blog/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
