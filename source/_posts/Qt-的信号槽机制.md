@@ -1,0 +1,77 @@
+---
+title: Qt 的信号槽机制
+date: 2025-02-10 18:33:47
+tags:
+    - Qt
+    - Python
+    - PySide
+---
+
+转载自 [Qt-PySide2-Primer](https://github.com/hubenchang0515/Qt-PySide2-Primer/blob/master/note/basic/02.signal_and_slot.md)，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。
+
+# Qt的信号槽机制
+信号和槽是Qt对象间信息交流的工具，要使用信号槽机制，则对象的类必须是`QObject`的子类。
+* 当一个信号被绑定到一个槽上之后，每次发送该信号的时候，都会信号的参数调用对应的槽函数
+* 信号和槽是多对多的关系，一个信号可以绑定多个槽，一个槽也可以绑定多个信号
+
+## 信号
+* 通过`QtCore.Signal`类来创建`信号`，其构造参数为每个信号参数的类型
+* 如果要重载信号，则将每一组参数类型写成一个`tuple`或`list`
+
+## 槽
+* 通过`QtCore.Slot`修饰器来创建`槽`，其参数为槽函数的参数类型
+* 如果槽函数有返回值，则需要使用修饰器的`result`参数来指明返回值类型
+* 如果要重载槽，只需要多次使用修饰器修饰器即可
+
+## 连接信号和槽
+* 通过`Signal`的`connect`方法来连接信号和槽
+* 对于重载过的信号，需要使用`[]`来指明使用哪一个重载，否则默认采用第一组参数类型
+
+## 发送信号
+* 通过`Signal`的`emit`方法来发送信号
+* 对于重载过的信号，需要使用`[]`来指明使用哪一个重载，否则默认采用第一组参数类型
+
+```Python
+import sys
+from PySide2 import QtCore
+from PySide2.QtCore import QObject,QCoreApplication
+
+# 继承QObject构建我们自己的类
+class People(QObject) :
+    # 定义信号，参数为 str,str 或 str,int
+    speak = QtCore.Signal((str,str),(str,int))
+    
+    # 构造函数
+    def __init__(self, name, parent=None) :
+        # 调用父类的构造函数，组织对象树
+        super().__init__(parent) 
+        self.name = name
+
+    # 定义槽，需要用result指定返回值类型(没有返回值可以省略)
+    @QtCore.Slot(str, str, result=None) # 参数类型为str,str
+    @QtCore.Slot(str, int, result=None) # 或 str,int
+    def hear(self, speaker, text) :
+        print(self.name, "hear", speaker, "speak :", text)
+
+
+if __name__ == "__main__":
+    # 创建应用
+    app = QCoreApplication(sys.argv)
+
+    tom = People("Tom")
+    jerry = People("Jerry")
+    
+    # 绑定信号和槽
+    tom.speak.connect(jerry.hear) # 默认第一组参数类型
+    jerry.speak[str,int].connect(tom.hear) # 指定参数类型
+    
+    # 发送信号
+    tom.speak.emit(tom.name, "How old are you?") # 默认第一组参数类型
+    jerry.speak[str,int].emit(jerry.name, 18) # 指定参数类型
+
+    # 启动应用
+    app.exec_()
+```
+
+## 参考 :  
+* [Qt for Python Signals and Slots](https://wiki.qt.io/Qt_for_Python_Signals_and_Slots)

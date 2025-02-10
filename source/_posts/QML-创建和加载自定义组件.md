@@ -1,0 +1,124 @@
+---
+title: QML 创建和加载自定义组件
+date: 2025-02-10 18:50:26
+tags:
+    - Qt
+    - QML
+    - Python
+    - PySide
+---
+
+转载自 [Qt-PySide2-Primer](https://github.com/hubenchang0515/Qt-PySide2-Primer/blob/master/note/qml/09.component_and_loader.md)，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。
+
+# 创建和加载自定义组件
+使用`Component`可以创建自定义的组件，它的顶层元素只能有一个，并且不能有`id`以外的属性 :  
+
+```QML
+Component {
+    id: componentId      // 组件的id
+
+    // 只能由一个顶层元素，在顶层元素内可以包含任意元素
+    Item {
+
+    }
+}
+```
+
+使用`Loader`可以加载qml文件或者组件 :  
+```QML
+Loader {
+    source: "xxx.qml"                 // qml文件
+    /* 或 */
+    sourceComponent: componentId      // 组件的id
+}
+```
+
+下面是一个示例，通过`Component`将一组相关的元素作为一个组件，再通过`Loader`多次加载 :  
+
+```QML
+import QtQuick 2.13
+import QtQuick.Window 2.13
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.13
+
+Window {
+    id: mainWindow
+    visible: true
+    width: 640
+    height: 400
+    title: qsTr("PySide2 QML")
+
+    // 创建组件
+    Component {
+        id: parameter // 组件ID
+
+        // 顶层元素
+        RowLayout {
+
+            TextField {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                placeholderText: qsTr("属性名")
+            }
+
+            ComboBox {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                textRole: "key"
+                model: ListModel {
+                    ListElement { key: "int"; value: 1 }
+                    ListElement { key: "string"; value: 2 }
+                    ListElement { key: "bool"; value: 3 }
+                }
+            }
+
+            TextField {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                placeholderText: qsTr("值域下界")
+            }
+
+            TextField {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                placeholderText: qsTr("值域上界")
+            }
+        }
+    }
+
+    Column {
+        anchors.fill: parent
+        spacing: 5
+
+        // 加载组件
+        Loader {
+            id: param1
+            sourceComponent: parameter      // 组件的id
+            width: parent.width
+        }
+
+        Loader {
+            id: param2
+            sourceComponent: parameter      // 组件的id
+            width: parent.width
+        }
+
+        Loader {
+            id: param3
+            sourceComponent: parameter      // 组件的id
+            width: parent.width
+        }
+    }
+}
+```
+
+![Image](https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master//image/qml/09.component_and_loader/parameters.png)
+
+## 参考 :  
+* QML
+  * [Component](https://doc.qt.io/qt-5/qml-qtqml-component.html)
+  * [Loader](https://doc.qt.io/qt-5/qml-qtquick-loader.html)

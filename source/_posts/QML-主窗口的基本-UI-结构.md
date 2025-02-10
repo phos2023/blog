@@ -1,0 +1,104 @@
+---
+title: QML 主窗口的基本 UI 结构
+date: 2025-02-10 18:43:10
+tags:
+    - Qt
+    - QML
+    - Python
+    - PySide
+---
+
+转载自 [Qt-PySide2-Primer](https://github.com/hubenchang0515/Qt-PySide2-Primer/blob/master/note/qml/04.application_window.md)，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。
+
+# 基本UI结构
+程序的UI可以按照设计者的喜好任意进行设计，Qt提供了一种最简单实用的UI结构。  
+
+![UI](https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master//image/qml/04.application_window/structure.png)
+
+通过`QtQuick.Controls`模块中的`ApplicationWindow`元素即可创建一个这样的窗口 :  
+
+```QML
+import QtQuick 2.13
+import QtQuick.Controls 2.5
+
+ApplicationWindow {
+    id: mainWindow
+    visible: true // 是否可见，请注意默认值是false不可见
+    width: 640
+    height: 400
+    title: qsTr("PySide2 QML")
+
+    // 状态栏
+    menuBar : MenuBar {
+        Menu {
+            title: qsTr("文件(&F)")
+            MenuItem { text: qsTr("打开(&O)") }
+            MenuItem { text: qsTr("保存(&S)") }
+        }
+
+        Menu {
+            title: qsTr("编辑(&E)")
+            MenuItem { text: qsTr("复制") }
+            MenuItem { text: qsTr("粘贴") }
+        }
+    }
+
+    // Header放置一个工具栏
+    header : ToolBar {
+        Row {
+            ToolButton {
+                icon.source: "./res/open.png"
+                icon.color: "transparent" // transparent表示使用图片原本的颜色
+            }
+
+            ToolButton {
+                icon.source: "./res/save.png"
+                icon.color: "transparent"
+            }
+
+            ToolButton {
+                icon.source: "./res/copy.png"
+                icon.color: "transparent"
+            }
+
+            ToolButton {
+                icon.source: "./res/paste.png"
+                icon.color: "transparent"
+            }
+        }
+    }
+
+    // Footer放置一个文本当作状态栏
+    footer : Text {
+        text: qsTr("状态栏")
+
+    }
+
+    // 其余对象属于Content
+    ScrollView { // 带滚动条
+        anchors.fill: parent
+        focus: true
+
+        TextArea {
+            font.pixelSize: 22
+            focus: true  // 获取焦点(即键盘输入状态)
+        }
+    }
+}
+```
+* `ApplicationWindow`的`menuBar`、`header`、`footer`属性的元素分别对应图中位置。
+* 其他所有子元素则属于图中的`Content`位置。
+* `Menu`和`MenuItem`元素可以在文本中使用`&`来设置快捷键，例如`&F`表示快捷键为`Alt + F`。
+
+![运行结果](https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master//image/qml/04.application_window/application.png)
+
+## 参考 :   
+* QML
+  * [ApplicationWindow](https://doc.qt.io/qt-5/qml-qtquick-controls2-applicationwindow.html)
+  * [MenuBar](https://doc.qt.io/qt-5/qml-qtquick-controls2-menubar.html)
+  * [Menu](https://doc.qt.io/qt-5/qml-qtquick-controls2-menu.html)
+  * [MenuItem](https://doc.qt.io/qt-5/qml-qtquick-controls2-menuitem.html)
+  * [ToolBar](https://doc.qt.io/qt-5/qml-qtquick-controls2-toolbar.html)
+  * [ToolButton](https://doc.qt.io/qt-5/qml-qtquick-controls2-toolbutton.html)
+  * [ScrollView](https://doc.qt.io/qt-5/qml-qtquick-controls2-scrollview.html)
+  * [TextArea](https://doc.qt.io/qt-5/qml-qtquick-controls2-textarea.html)

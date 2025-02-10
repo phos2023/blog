@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Qt 的信号槽机制 | 磷叶石的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="转载自 Qt-PySide2-Primer，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。 Qt的信号槽机制信号和槽是Qt对象间信息交流的工具，要使用信号槽机制，则对象的类必须是QObject的子类。  当一个信号被绑定到一个槽上之后，每次发送该信号的时候，都会信号的参数调用对应的槽函数 信号和槽是多对多的关系，一个信号可以绑定多个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt 的信号槽机制">
+<meta property="og:url" content="http://phos2023.github.io/blog/2025/02/10/Qt-%E7%9A%84%E4%BF%A1%E5%8F%B7%E6%A7%BD%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="磷叶石的博客">
+<meta property="og:description" content="转载自 Qt-PySide2-Primer，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。 Qt的信号槽机制信号和槽是Qt对象间信息交流的工具，要使用信号槽机制，则对象的类必须是QObject的子类。  当一个信号被绑定到一个槽上之后，每次发送该信号的时候，都会信号的参数调用对应的槽函数 信号和槽是多对多的关系，一个信号可以绑定多个">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-02-10T10:33:47.000Z">
+<meta property="article:modified_time" content="2025-02-10T10:37:03.185Z">
+<meta property="article:author" content="磷叶石">
+<meta property="article:tag" content="Qt">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="PySide">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/blog/blog/atom.xml" title="磷叶石的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/blog/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">磷叶石的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">没有买卖，就没有杀害。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/blog/blog">Home</a>
+        
+          <a class="main-nav-link" href="/blog/blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/phos2023"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/blog/blog/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://phos2023.github.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Qt-的信号槽机制" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/blog/2025/02/10/Qt-%E7%9A%84%E4%BF%A1%E5%8F%B7%E6%A7%BD%E6%9C%BA%E5%88%B6/" class="article-date">
+  <time class="dt-published" datetime="2025-02-10T10:33:47.000Z" itemprop="datePublished">2025-02-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Qt 的信号槽机制
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>转载自 <a target="_blank" rel="noopener" href="https://github.com/hubenchang0515/Qt-PySide2-Primer/blob/master/note/basic/02.signal_and_slot.md">Qt-PySide2-Primer</a>，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。</p>
+<h1 id="Qt的信号槽机制"><a href="#Qt的信号槽机制" class="headerlink" title="Qt的信号槽机制"></a>Qt的信号槽机制</h1><p>信号和槽是Qt对象间信息交流的工具，要使用信号槽机制，则对象的类必须是<code>QObject</code>的子类。</p>
+<ul>
+<li>当一个信号被绑定到一个槽上之后，每次发送该信号的时候，都会信号的参数调用对应的槽函数</li>
+<li>信号和槽是多对多的关系，一个信号可以绑定多个槽，一个槽也可以绑定多个信号</li>
+</ul>
+<h2 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h2><ul>
+<li>通过<code>QtCore.Signal</code>类来创建<code>信号</code>，其构造参数为每个信号参数的类型</li>
+<li>如果要重载信号，则将每一组参数类型写成一个<code>tuple</code>或<code>list</code></li>
+</ul>
+<h2 id="槽"><a href="#槽" class="headerlink" title="槽"></a>槽</h2><ul>
+<li>通过<code>QtCore.Slot</code>修饰器来创建<code>槽</code>，其参数为槽函数的参数类型</li>
+<li>如果槽函数有返回值，则需要使用修饰器的<code>result</code>参数来指明返回值类型</li>
+<li>如果要重载槽，只需要多次使用修饰器修饰器即可</li>
+</ul>
+<h2 id="连接信号和槽"><a href="#连接信号和槽" class="headerlink" title="连接信号和槽"></a>连接信号和槽</h2><ul>
+<li>通过<code>Signal</code>的<code>connect</code>方法来连接信号和槽</li>
+<li>对于重载过的信号，需要使用<code>[]</code>来指明使用哪一个重载，否则默认采用第一组参数类型</li>
+</ul>
+<h2 id="发送信号"><a href="#发送信号" class="headerlink" title="发送信号"></a>发送信号</h2><ul>
+<li>通过<code>Signal</code>的<code>emit</code>方法来发送信号</li>
+<li>对于重载过的信号，需要使用<code>[]</code>来指明使用哪一个重载，否则默认采用第一组参数类型</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> PySide2 <span class="keyword">import</span> QtCore</span><br><span class="line"><span class="keyword">from</span> PySide2.QtCore <span class="keyword">import</span> QObject,QCoreApplication</span><br><span class="line"></span><br><span class="line"><span class="comment"># 继承QObject构建我们自己的类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">People</span>(<span class="title class_ inherited__">QObject</span>) :</span><br><span class="line">    <span class="comment"># 定义信号，参数为 str,str 或 str,int</span></span><br><span class="line">    speak = QtCore.Signal((<span class="built_in">str</span>,<span class="built_in">str</span>),(<span class="built_in">str</span>,<span class="built_in">int</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 构造函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, parent=<span class="literal">None</span></span>) :</span><br><span class="line">        <span class="comment"># 调用父类的构造函数，组织对象树</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(parent) </span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 定义槽，需要用result指定返回值类型(没有返回值可以省略)</span></span><br><span class="line"><span class="meta">    @QtCore.Slot(<span class="params"><span class="built_in">str</span>, <span class="built_in">str</span>, result=<span class="literal">None</span></span>) </span><span class="comment"># 参数类型为str,str</span></span><br><span class="line"><span class="meta">    @QtCore.Slot(<span class="params"><span class="built_in">str</span>, <span class="built_in">int</span>, result=<span class="literal">None</span></span>) </span><span class="comment"># 或 str,int</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">hear</span>(<span class="params">self, speaker, text</span>) :</span><br><span class="line">        <span class="built_in">print</span>(<span class="variable language_">self</span>.name, <span class="string">&quot;hear&quot;</span>, speaker, <span class="string">&quot;speak :&quot;</span>, text)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment"># 创建应用</span></span><br><span class="line">    app = QCoreApplication(sys.argv)</span><br><span class="line"></span><br><span class="line">    tom = People(<span class="string">&quot;Tom&quot;</span>)</span><br><span class="line">    jerry = People(<span class="string">&quot;Jerry&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 绑定信号和槽</span></span><br><span class="line">    tom.speak.connect(jerry.hear) <span class="comment"># 默认第一组参数类型</span></span><br><span class="line">    jerry.speak[<span class="built_in">str</span>,<span class="built_in">int</span>].connect(tom.hear) <span class="comment"># 指定参数类型</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 发送信号</span></span><br><span class="line">    tom.speak.emit(tom.name, <span class="string">&quot;How old are you?&quot;</span>) <span class="comment"># 默认第一组参数类型</span></span><br><span class="line">    jerry.speak[<span class="built_in">str</span>,<span class="built_in">int</span>].emit(jerry.name, <span class="number">18</span>) <span class="comment"># 指定参数类型</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 启动应用</span></span><br><span class="line">    app.exec_()</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考 :"></a>参考 :</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://wiki.qt.io/Qt_for_Python_Signals_and_Slots">Qt for Python Signals and Slots</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://phos2023.github.io/blog/2025/02/10/Qt-%E7%9A%84%E4%BF%A1%E5%8F%B7%E6%A7%BD%E6%9C%BA%E5%88%B6/" data-id="cm6yy8t8o000imkin3lss5o2k" data-title="Qt 的信号槽机制" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/PySide/" rel="tag">PySide</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qt/" rel="tag">Qt</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2025/02/10/%E5%8A%A0%E8%BD%BD-QML/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          加载 QML
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2025/02/10/QObject-%E5%92%8C%E5%AF%B9%E8%B1%A1%E6%A0%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">QObject 和对象树</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Proxy/" rel="tag">Proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/PySide/" rel="tag">PySide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/QML/" rel="tag">QML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Qt/" rel="tag">Qt</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Git/" style="font-size: 10px;">Git</a> <a href="/blog/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/blog/tags/PySide/" style="font-size: 20px;">PySide</a> <a href="/blog/tags/Python/" style="font-size: 20px;">Python</a> <a href="/blog/tags/QML/" style="font-size: 15px;">QML</a> <a href="/blog/tags/Qt/" style="font-size: 20px;">Qt</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2025/02/">February 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%BD%BF%E7%94%A8Loader%E5%8F%98%E6%9B%B4%E9%A1%B5%E9%9D%A2/">QML 使用Loader变更页面</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6/">QML 创建和加载自定义组件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%B1%BB/">QML 创建自定义的类</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%BD%BF%E7%94%A8-Canvas-%E7%BB%98%E5%9B%BE/">QML 使用 Canvas 绘图</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%B8%AD%E4%BD%BF%E7%94%A8-Python-%E5%AF%B9%E8%B1%A1/">QML 中使用 Python 对象</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+        友情链接: <a href="https://hubenchang0515.github.io/" target="_blank">Plan C 的主页</a><br/>
+      
+      &copy; 2025 磷叶石<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/blog" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/blog/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

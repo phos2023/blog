@@ -1,0 +1,149 @@
+---
+title: QML 定义属性和方法
+date: 2025-02-10 18:41:15
+tags:
+    - Qt
+    - QML
+    - Python
+    - PySide
+---
+
+转载自 [Qt-PySide2-Primer](https://github.com/hubenchang0515/Qt-PySide2-Primer/blob/master/note/qml/03.property_and_method.md)，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。
+
+# 定义属性和方法
+在使用QML的类创建元素对象时，已经获得了类的属性和方法。使用`property`关键字和`function`关键字可以在对象中创建自定义的属性和方法。
+
+## 定义属性
+```QML
+property type name : value
+```
+它只支持以下类型，对于复杂的数据，应当交给C++或Python处理 :  
+
+| QML type | 对应的C++类型  | 兼容的Python类型 |  默认值    |
+| :-:      | :-:           | :-:             | :-:        |
+| bool     | bool          | bool            | false      |
+| int      | int           | int             | 0          |
+| double   | double        | float           | 0.0        |
+| real     | double        | float           | 0.0        |
+| string   | QString       | str             | ""         |
+| url      | QUrl          | str             | ""         |
+| color    | QColor        | QColor          | 0x000000   |
+| date     | QDateTime     | QDateTime       | -          |
+| variant  | QVariant      | QVariant        | -          |
+* QML中`url`类型的变量传给Python时可以用`str`接收，但是不能用`QUrl`接收。
+
+下面代码每次点击按钮，Text显示的值就会增加1。
+```QML
+import QtQuick 2.13
+import QtQuick.Window 2.13
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.13
+
+Window {
+    id: mainWindow
+    visible: true
+    width: 640
+    height: 400
+    title: qsTr("PySide2 QML")
+
+    ColumnLayout {
+        anchors.fill: parent
+
+        Text {
+            // 定义一个整数类型的属性，名为number，值为0
+            property int number : 0
+            // 将显示的内容设为number
+            text: "clicked : " + number
+
+            id: text
+            Layout.fillWidth: true
+            Layout.preferredHeight: 300
+            
+            font.pixelSize: 72  // 字体大小
+            horizontalAlignment: Text.AlignHCenter // 水平居中
+            verticalAlignment: Text.AlignVCenter   // 竖直居中
+        }
+
+        Button {
+            width: 640
+            text: qsTr("BUTTON")
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            onClicked : {
+                // 点击按钮时令text的number属性加一
+                text.number += 1
+            }
+        }
+    }
+}
+```
+
+![Image](https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master//image/qml/03.property_and_method/property.png)
+
+## 定义方法
+方法的定义方式和JavaScript一样，参数为动态类型，不能像`signal`一样支持静态类型检测。
+```QML
+function name(paramaters list){
+
+}
+```
+
+下面的代码为`text`创建了一个`add`的方法，调用这个方法能使`text.number`的值增加。运行效果和上面一样，每次点击按钮，显示的值加一。
+```QML
+import QtQuick 2.13
+import QtQuick.Window 2.13
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.13
+
+Window {
+    id: mainWindow
+    visible: true
+    width: 640
+    height: 400
+    title: qsTr("PySide2 QML")
+
+    ColumnLayout {
+        anchors.fill: parent
+
+        Text {
+            // 定义一个整数类型的属性，名为number，值为0
+            property int number : 0
+            // 将显示的内容设为number
+            text: "clicked : " + number
+
+            id: text
+            Layout.fillWidth: true
+            Layout.preferredHeight: 300
+            
+            font.pixelSize: 72  // 字体大小
+            horizontalAlignment: Text.AlignHCenter // 水平居中
+            verticalAlignment: Text.AlignVCenter   // 竖直居中
+
+            // 定义一个方法，调用这个方法可以使number的值加n
+            function add(n)
+            {
+                number += n
+            }
+        }
+
+        Button {
+            width: 640
+            text: qsTr("BUTTON")
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            onClicked : {
+                // 调用text的add方法使显示的值加一
+                text.add(1)
+            }
+        }
+    }
+}
+```
+
+## 属性更改通知
+元素中任意属性的值发生变化时，会自动发送属性更改通知的信号，若变化的属性名为`properyName`，则对应的信号处理器则名为`onPropertyNameChanged`。
+
+## 参考 :  
+* QML
+  * [Text](https://doc.qt.io/qt-5/qml-qtquick-text.html)
+  * [property](https://doc.qt.io/qt-5/qtqml-syntax-objectattributes.html#property-attributes)

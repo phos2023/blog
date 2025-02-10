@@ -1,0 +1,100 @@
+---
+title: 加载 QML
+date: 2025-02-10 18:35:09
+tags:
+    - Qt
+    - QML
+    - Python
+    - PySide
+---
+
+转载自 [Qt-PySide2-Primer](https://github.com/hubenchang0515/Qt-PySide2-Primer/blob/master/note/qml/00.qml_app_engine.md)，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。
+
+# 加载QML
+QML是在Qt Quick中用来描述GUI界面的声明式脚本语言，并支持嵌入ECMAScript实现一些简单的逻辑。
+> QML主要用于描述界面，复杂的业务逻辑主要由C++或Python来实现。
+
+QML采用如下形式创建对象，并且可以内嵌其他对象 : 
+```
+类名 {
+    属性名 : 属性值
+    属性名 : 属性值
+    属性名 : 属性值
+    ...
+}
+```
+* `id`属性是对象的唯一标识符，在每个类中都存在，相当于C++或Python中的对象变量名  
+* QML通过形如`import 模块名 版本号`的形式来加载模块。  
+
+下面是一段QML代码(文件名为`mainwindow.qml`) :  
+```QML
+import QtQuick 2.13
+import QtQuick.Window 2.13
+
+Window { // 创建一个窗口对象
+    id: mainWindow
+    visible: true // 是否可见，请注意默认值是false不可见
+    width: 640
+    height: 400
+    title: qsTr("PySide2 QML")
+
+    Rectangle { // 创建一个矩形对象
+        anchors.fill: parent
+        color: "black"
+    }
+
+    Text { // 创建一个文本对象
+        anchors.centerIn: parent
+        color: "white"
+        text: qsTr("Hello World")
+    }
+}
+```
+* 这段代码创建了一个`Window`对象，将其命名为`mainWindow`，宽度为`640`，高度为`400`。然后在其中嵌入了一个`Rectangle`对象和一个`Text`对象。
+
+然后使用Python程序来加载QML并显示出来 :  
+```Python
+import sys
+from PySide2.QtGui import QGuiApplication
+from PySide2.QtQml import QQmlApplicationEngine
+
+if __name__ == "__main__":
+    app = QGuiApplication(sys.argv)
+    engine = QQmlApplicationEngine("mainwindow.qml")
+
+    sys.exit(app.exec_())
+```
+
+这就是一个最基本的QML程序。
+* 每一个Qt的应用程序都需要一个Application对象(包含`QCoreApplication`、`QGuiApplication`、`QApplication`)来运行。
+* `QQmlApplicationEngine`对象用来加载运行qml的代码。
+
+运行Python程序 :  
+![运行结果](https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master/image/qml/00.qml_app_engine/hello_world.png)
+
+上面的代码采用的是相对路径，如果工作目录不是脚本所在目录就会找不到qml文件，为此我们需要求出qml文件的绝对路径 :  
+```Python
+import sys, os
+from PySide2.QtGui import QGuiApplication
+from PySide2.QtQml import QQmlApplicationEngine
+
+if __name__ == "__main__":
+    app = QGuiApplication(sys.argv)
+
+    # 得出qml文件的绝对路径
+    file = "mainwindow.qml"
+    qml = os.path.abspath(os.path.join(os.path.dirname(__file__), file))
+
+    engine = QQmlApplicationEngine(qml)
+
+    sys.exit(app.exec_())
+```
+
+## 参考 :   
+* QML
+  * [Window](https://doc.qt.io/qt-5/qml-qtquick-window-window.html)
+  * [Rectangle](https://doc.qt.io/qt-5/qml-qtquick-rectangle.html)
+  * [Text](https://doc.qt.io/qt-5/qml-qtquick-text.html)
+* PySide2
+  * [QGuiApplication](https://doc.qt.io/qtforpython/PySide2/QtGui/QGuiApplication.html)  
+  * [QQmlApplicationEngine](https://doc.qt.io/qtforpython/PySide2/QtQml/QQmlApplicationEngine.html)

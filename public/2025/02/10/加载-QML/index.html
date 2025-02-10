@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>加载 QML | 磷叶石的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="转载自 Qt-PySide2-Primer，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。 加载QMLQML是在Qt Quick中用来描述GUI界面的声明式脚本语言，并支持嵌入ECMAScript实现一些简单的逻辑。  QML主要用于描述界面，复杂的业务逻辑主要由C++或Python来实现。  QML采用如下形式创建对象，并且可以内">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加载 QML">
+<meta property="og:url" content="http://phos2023.github.io/blog/2025/02/10/%E5%8A%A0%E8%BD%BD-QML/index.html">
+<meta property="og:site_name" content="磷叶石的博客">
+<meta property="og:description" content="转载自 Qt-PySide2-Primer，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。 加载QMLQML是在Qt Quick中用来描述GUI界面的声明式脚本语言，并支持嵌入ECMAScript实现一些简单的逻辑。  QML主要用于描述界面，复杂的业务逻辑主要由C++或Python来实现。  QML采用如下形式创建对象，并且可以内">
+<meta property="og:locale">
+<meta property="og:image" content="https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master/image/qml/00.qml_app_engine/hello_world.png">
+<meta property="article:published_time" content="2025-02-10T10:35:09.000Z">
+<meta property="article:modified_time" content="2025-02-10T10:41:43.286Z">
+<meta property="article:author" content="磷叶石">
+<meta property="article:tag" content="Qt">
+<meta property="article:tag" content="QML">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="PySide">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master/image/qml/00.qml_app_engine/hello_world.png">
+  
+    <link rel="alternate" href="/blog/blog/atom.xml" title="磷叶石的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/blog/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/blog/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css">
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">磷叶石的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">没有买卖，就没有杀害。</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/blog/blog">Home</a>
+        
+          <a class="main-nav-link" href="/blog/blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/phos2023"><span class="fa fa-github"></span></a>
+          
+        
+        
+          <a class="nav-icon" href="/blog/blog/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://phos2023.github.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-加载-QML" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/blog/2025/02/10/%E5%8A%A0%E8%BD%BD-QML/" class="article-date">
+  <time class="dt-published" datetime="2025-02-10T10:35:09.000Z" itemprop="datePublished">2025-02-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      加载 QML
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>转载自 <a target="_blank" rel="noopener" href="https://github.com/hubenchang0515/Qt-PySide2-Primer/blob/master/note/qml/00.qml_app_engine.md">Qt-PySide2-Primer</a>，年代久远，PySide2 无法在新版本的 Python 中运行，建议替换为 PySide6，原文的代码仍可使用。</p>
+<h1 id="加载QML"><a href="#加载QML" class="headerlink" title="加载QML"></a>加载QML</h1><p>QML是在Qt Quick中用来描述GUI界面的声明式脚本语言，并支持嵌入ECMAScript实现一些简单的逻辑。</p>
+<blockquote>
+<p>QML主要用于描述界面，复杂的业务逻辑主要由C++或Python来实现。</p>
+</blockquote>
+<p>QML采用如下形式创建对象，并且可以内嵌其他对象 : </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">类名 &#123;</span><br><span class="line">    属性名 : 属性值</span><br><span class="line">    属性名 : 属性值</span><br><span class="line">    属性名 : 属性值</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>id</code>属性是对象的唯一标识符，在每个类中都存在，相当于C++或Python中的对象变量名  </li>
+<li>QML通过形如<code>import 模块名 版本号</code>的形式来加载模块。</li>
+</ul>
+<p>下面是一段QML代码(文件名为<code>mainwindow.qml</code>) :  </p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> QtQuick <span class="number">2.13</span></span><br><span class="line"><span class="keyword">import</span> QtQuick.Window <span class="number">2.13</span></span><br><span class="line"></span><br><span class="line"><span class="title">Window</span> &#123; <span class="comment">// 创建一个窗口对象</span></span><br><span class="line">    <span class="attribute">id:</span><span class="string"> mainWindow</span></span><br><span class="line">    <span class="attribute">visible</span>: <span class="literal">true</span> <span class="comment">// 是否可见，请注意默认值是false不可见</span></span><br><span class="line">    <span class="attribute">width</span>: <span class="number">640</span></span><br><span class="line">    <span class="attribute">height</span>: <span class="number">400</span></span><br><span class="line">    <span class="attribute">title</span>: qsTr(<span class="string">&quot;PySide2 QML&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="title">Rectangle</span> &#123; <span class="comment">// 创建一个矩形对象</span></span><br><span class="line">        <span class="attribute">anchors.fill</span>: <span class="built_in">parent</span></span><br><span class="line">        <span class="attribute">color</span>: <span class="string">&quot;black&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title">Text</span> &#123; <span class="comment">// 创建一个文本对象</span></span><br><span class="line">        <span class="attribute">anchors.centerIn</span>: <span class="built_in">parent</span></span><br><span class="line">        <span class="attribute">color</span>: <span class="string">&quot;white&quot;</span></span><br><span class="line">        <span class="attribute">text</span>: qsTr(<span class="string">&quot;Hello World&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这段代码创建了一个<code>Window</code>对象，将其命名为<code>mainWindow</code>，宽度为<code>640</code>，高度为<code>400</code>。然后在其中嵌入了一个<code>Rectangle</code>对象和一个<code>Text</code>对象。</li>
+</ul>
+<p>然后使用Python程序来加载QML并显示出来 :  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> PySide2.QtGui <span class="keyword">import</span> QGuiApplication</span><br><span class="line"><span class="keyword">from</span> PySide2.QtQml <span class="keyword">import</span> QQmlApplicationEngine</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app = QGuiApplication(sys.argv)</span><br><span class="line">    engine = QQmlApplicationEngine(<span class="string">&quot;mainwindow.qml&quot;</span>)</span><br><span class="line"></span><br><span class="line">    sys.exit(app.exec_())</span><br></pre></td></tr></table></figure>
+
+<p>这就是一个最基本的QML程序。</p>
+<ul>
+<li>每一个Qt的应用程序都需要一个Application对象(包含<code>QCoreApplication</code>、<code>QGuiApplication</code>、<code>QApplication</code>)来运行。</li>
+<li><code>QQmlApplicationEngine</code>对象用来加载运行qml的代码。</li>
+</ul>
+<p>运行Python程序 :<br><img src="https://github.com/hubenchang0515/Qt-PySide2-Primer/raw/master/image/qml/00.qml_app_engine/hello_world.png" alt="运行结果"></p>
+<p>上面的代码采用的是相对路径，如果工作目录不是脚本所在目录就会找不到qml文件，为此我们需要求出qml文件的绝对路径 :  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys, os</span><br><span class="line"><span class="keyword">from</span> PySide2.QtGui <span class="keyword">import</span> QGuiApplication</span><br><span class="line"><span class="keyword">from</span> PySide2.QtQml <span class="keyword">import</span> QQmlApplicationEngine</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    app = QGuiApplication(sys.argv)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 得出qml文件的绝对路径</span></span><br><span class="line">    file = <span class="string">&quot;mainwindow.qml&quot;</span></span><br><span class="line">    qml = os.path.abspath(os.path.join(os.path.dirname(__file__), file))</span><br><span class="line"></span><br><span class="line">    engine = QQmlApplicationEngine(qml)</span><br><span class="line"></span><br><span class="line">    sys.exit(app.exec_())</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考 :"></a>参考 :</h2><ul>
+<li>QML<ul>
+<li><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qml-qtquick-window-window.html">Window</a></li>
+<li><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qml-qtquick-rectangle.html">Rectangle</a></li>
+<li><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qml-qtquick-text.html">Text</a></li>
+</ul>
+</li>
+<li>PySide2<ul>
+<li><a target="_blank" rel="noopener" href="https://doc.qt.io/qtforpython/PySide2/QtGui/QGuiApplication.html">QGuiApplication</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://doc.qt.io/qtforpython/PySide2/QtQml/QQmlApplicationEngine.html">QQmlApplicationEngine</a></li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://phos2023.github.io/blog/2025/02/10/%E5%8A%A0%E8%BD%BD-QML/" data-id="cm6yy8t8q000kmkin6wt14n5i" data-title="加载 QML" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/PySide/" rel="tag">PySide</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/QML/" rel="tag">QML</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qt/" rel="tag">Qt</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2025/02/10/QML-%E5%B8%83%E5%B1%80/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          QML 布局
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2025/02/10/Qt-%E7%9A%84%E4%BF%A1%E5%8F%B7%E6%A7%BD%E6%9C%BA%E5%88%B6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Qt 的信号槽机制</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Git/" rel="tag">Git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Proxy/" rel="tag">Proxy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/PySide/" rel="tag">PySide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/QML/" rel="tag">QML</a></li><li class="tag-list-item"><a class="tag-list-link" href="/blog/tags/Qt/" rel="tag">Qt</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/blog/tags/Git/" style="font-size: 10px;">Git</a> <a href="/blog/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/blog/tags/PySide/" style="font-size: 20px;">PySide</a> <a href="/blog/tags/Python/" style="font-size: 20px;">Python</a> <a href="/blog/tags/QML/" style="font-size: 15px;">QML</a> <a href="/blog/tags/Qt/" style="font-size: 20px;">Qt</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2025/02/">February 2025</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%BD%BF%E7%94%A8Loader%E5%8F%98%E6%9B%B4%E9%A1%B5%E9%9D%A2/">QML 使用Loader变更页面</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6/">QML 创建和加载自定义组件</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%B1%BB/">QML 创建自定义的类</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%BD%BF%E7%94%A8-Canvas-%E7%BB%98%E5%9B%BE/">QML 使用 Canvas 绘图</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2025/02/10/QML-%E4%B8%AD%E4%BD%BF%E7%94%A8-Python-%E5%AF%B9%E8%B1%A1/">QML 中使用 Python 对象</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+        友情链接: <a href="https://hubenchang0515.github.io/" target="_blank">Plan C 的主页</a><br/>
+      
+      &copy; 2025 磷叶石<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/blog" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/blog/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/blog/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/blog/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
