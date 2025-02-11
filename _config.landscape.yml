@@ -3,10 +3,10 @@
 # ===============
 # Navigation menu
 menu:
-  Home: /blog
-  Archives: /blog/archives
+  Home: 
+  Archives: /archives
 # RSS link
-rss: /blog/atom.xml
+rss: /atom.xml
 # Path of title banner image of page top
 banner: "/blog/images/banner.jpeg"
 # Subtitle of page top

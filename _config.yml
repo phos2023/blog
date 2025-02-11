@@ -101,4 +101,8 @@ theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: git@github.com:phos2023/blog.git
+  branch: gh-pages
+  message: deploy
+
